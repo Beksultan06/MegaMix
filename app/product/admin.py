@@ -1,5 +1,5 @@
 from django.contrib import admin
-from app.product.models import Product, ProductImage
+from app.product.models import Product, ProductImage, Category
 
 class ImageProductInlin(admin.TabularInline):
     model = ProductImage
@@ -11,3 +11,5 @@ class ImageProductInlin(admin.TabularInline):
 class ProductAdmin(admin.ModelAdmin):
     inlines = [ImageProductInlin]
     
+
+admin.site.register(Category)

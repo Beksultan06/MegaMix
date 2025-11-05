@@ -1,6 +1,25 @@
 from django.db import models
 
+
+class Category(models.Model):
+    title = models.CharField(
+        max_length=155,
+        verbose_name='Категорий'
+    )
+    
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = 'Категорий'
+        verbose_name_plural = 'Категорий'
+
 class Product(models.Model):
+    category = models.ForeignKey(
+        Category, on_delete=models.SET_NULL,
+        related_name="category", 
+        blank=True, null=True
+    )
     title = models.CharField(
         max_length=155,
         verbose_name='Заголовок'
@@ -49,6 +68,11 @@ class ProductImage(models.Model):
         upload_to='product/',
         verbose_name='Фото Продукта'
     )
+
+    def save(self, *args, **kwargs):
+        if self.image:
+            self.image = save_image_as_webp(self.image, folder="product")
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.id 

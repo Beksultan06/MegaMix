@@ -1,5 +1,7 @@
 from django.db import models
 
+def upload_about_image(instance, filename):
+    return upload_to_webp(instance, filename, folder="about")
 
 class Settings(models.Model):
     logo = models.ImageField(
@@ -84,10 +86,6 @@ class About(models.Model):
     description = models.TextField(
         verbose_name='Описание О нас'
     )
-    image_banner = models.ImageField(
-        upload_to='about',
-        verbose_name='Фото о Нас'
-    )
     image = models.ImageField(
         upload_to='about',
         verbose_name='Фото '
@@ -103,18 +101,30 @@ class About(models.Model):
         max_length=155,
         verbose_name='Заголовка Услуги'
     )
+    image_banner = models.ImageField(
+        upload_to=upload_about_image,
+        verbose_name='Фото Баннер'
+    )
+    image = models.ImageField(
+        upload_to=upload_about_image,
+        verbose_name='Фото'
+    )
     image1 = models.ImageField(
-        upload_to='about',
-        verbose_name='Фото 1'
+        upload_to=upload_about_image
     )
     image2 = models.ImageField(
-        upload_to='about',
-        verbose_name='Фото 2'
+        upload_to=upload_about_image
     )
     image3 = models.ImageField(
-        upload_to='about',
-        verbose_name='Фото 3'
+        upload_to=upload_about_image
     )
+
+    def save(self, *args, **kwargs):
+        for field_name in ["image_banner", "image", "image1", "image2", "image3"]:
+            img = getattr(self, field_name)
+            if img:
+                setattr(self, field_name, save_image_as_webp(img, folder="about"))
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.title

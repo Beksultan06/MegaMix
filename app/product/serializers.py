@@ -4,15 +4,17 @@ from app.product.models import Product, ProductImage
 class ProductImageSerializers(serializers.ModelSerializer):
     class Meta:
         model = ProductImage
-        fields = ("id", 'image')
+        fields = ["id", "image"]
 
 
 class ProductSerializers(serializers.ModelSerializer):
-    images = ProductImageSerializers(many=True, read_only=True)
+    images = ProductImageSerializers(many=True, read_only=True) 
+    category = serializers.StringRelatedField() 
 
     class Meta:
         model = Product
         fields = [
             'id', 'title', 'description', 'price', 'price_discount', 'main_params',
-            'sound_and_features', 'battery_and_power_supply', 'additionally', text
+            'sound_and_features', 'battery_and_power_supply', 'additionally', 'text',
+            'category', 'images'  
         ]
