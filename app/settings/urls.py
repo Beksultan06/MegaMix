@@ -1,5 +1,5 @@
 from rest_framework.routers import DefaultRouter
-from .views import SettingsViewSet
+from .views import SettingsViewSet, AboutViewSet, ServicesViewSet
 
 router = DefaultRouter()
 router.register(r"settings", SettingsViewSet, basename="settings")

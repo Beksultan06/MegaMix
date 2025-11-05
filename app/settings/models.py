@@ -31,7 +31,7 @@ class Settings(models.Model):
         max_length=155,
         verbose_name='Заголовка Продукты'
     )
-    popular_product = models.TextField(
+    popular_product_text = models.TextField(
         verbose_name='Описание Продукты'
     )
     title_catalog = models.CharField(
