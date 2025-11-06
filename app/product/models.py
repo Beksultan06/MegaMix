@@ -148,3 +148,30 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f"{self.product.title} x {self.quantity}"
+
+
+class Contact(models.Model):
+    last_name = models.CharField(
+        max_length=155,verbose_name='Фамилия'
+    )
+    first_name = models.CharField(
+        max_length=155,verbose_name='Имя'
+    )
+    number = models.CharField(
+        max_length=25,
+        verbose_name='Норер телефона'
+    )
+    email = models.CharField(
+        max_length=155,
+        verbose_name='Почта'
+    )
+    text = models.TextField(
+        verbose_name='Сообщение'
+    )
+
+    def __str__(self):
+        return self.text
+    
+    class Meta:
+        verbose_name = 'Контакт'
+        verbose_name_plural = 'Контакты'

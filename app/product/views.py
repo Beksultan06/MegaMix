@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from django.core.cache import cache
 
-from app.product.models import Product, Favorite, Order
-from app.product.serializers import ProductSerializers, FavoriteSerializer, OrderSerializer, CartItemSerializer
+from app.product.models import Product, Favorite, Order, Contact
+from app.product.serializers import ProductSerializers, FavoriteSerializer, OrderSerializer, CartItemSerializer, ContactSerializers
 from app.product.service import ProductService
 from app.product.utils import get_or_create_token, toggle_favorite, get_favorites, create_order_from_cart
 
@@ -89,3 +89,8 @@ class OrderCreateViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
         order = create_order_from_cart(request, serializer.validated_data)
         output_serializer = self.get_serializer(order)
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+
+
+class ContactAPI(viewsets.GenericViewSet, mixins.CreateModelMixin):
+    queryset = Contact.objects.all()
+    serializer_class = ContactSerializers

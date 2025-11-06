@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from app.product.models import Product, ProductImage, Favorite, OrderItem, Order, CartItem
+from app.product.models import Product, ProductImage, Favorite, OrderItem, Order, CartItem, Contact
 
 class ProductImageSerializers(serializers.ModelSerializer):
     class Meta:
@@ -50,3 +50,8 @@ class OrderSerializer(serializers.ModelSerializer):
             'delivery_type', 'scheduled_date', 'scheduled_time',
             'city', 'address', 'note', 'created_at', 'items'
         ]
+
+class ContactSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Contact
+        fields = ['id', 'last_name', 'first_name', 'number', 'email', 'text']
