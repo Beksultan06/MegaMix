@@ -6,7 +6,7 @@ from django.core.cache import cache
 from app.product.models import Product, Favorite, Order
 from app.product.serializers import ProductSerializers, FavoriteSerializer, OrderSerializer, CartItemSerializer
 from app.product.service import ProductService
-from app.product.utils import get_or_create_token, toggle_favorite, get_favorites, create_order_from_cart
+from app.product.utils import add_to_cart, get_cart_items, get_or_create_cart_token, get_or_create_token, remove_from_cart, toggle_favorite, get_favorites, create_order_from_cart
 
 class ProductAPI(viewsets.GenericViewSet, mixins.ListModelMixin):
     serializer_class = ProductSerializers
