@@ -1,6 +1,6 @@
 import uuid
 from django.shortcuts import get_object_or_404
-from .models import Product, Favorite
+from .models import Product, Favorite, Order
 
 def get_or_create_token(request):
     token = request.COOKIES.get('anon_token')
