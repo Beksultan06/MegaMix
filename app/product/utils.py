@@ -1,6 +1,7 @@
-import uuid
+import uuid, asyncio
 from django.shortcuts import get_object_or_404
 from .models import Product, Favorite, Order
+from app.telegrambot.utils import send_message_to_all
 
 def get_or_create_token(request):
     token = request.COOKIES.get('anon_token')
@@ -46,6 +47,27 @@ def get_cart_items(token):
     return CartItem.objects.filter(token=token)
 
 
+async def send_new_order_notification(order):
+    text = (
+        f"🚨 Поступил новый заказ!\n\n"
+        f"🔹 Номер заказа: #{order.id}\n"
+        f"👤 Клиент: {order.full_name}\n"
+        f"📞 Телефон: {order.phone_number}\n"
+        f"🏙️ Город: {order.city}\n"
+        f"📦 Адрес: {order.address}\n"
+    )
+
+    items = order.items.all()
+    if items.exists():
+        text += "\n🛍️ Товары:\n"
+        for item in items:
+            text += f"• {item.product.title} × {item.quantity}\n"
+
+    text += "\n✅ Проверь заказ в админ-панели."
+
+    await send_message_to_all(text)
+
+
 def create_order_from_cart(request, order_data):
     token = get_or_create_cart_token(request)
     cart_items = get_cart_items(token)
@@ -71,4 +93,6 @@ def create_order_from_cart(request, order_data):
         )
 
     cart_items.delete()
+    asyncio.run(send_new_order_notification(order))
+
     return order

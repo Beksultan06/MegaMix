@@ -7,6 +7,7 @@ from app.product.models import Product, Favorite, Order, Contact
 from app.product.serializers import ProductSerializers, FavoriteSerializer, OrderSerializer, CartItemSerializer, ContactSerializers
 from app.product.service import ProductService
 from app.product.utils import get_or_create_token, toggle_favorite, get_favorites, create_order_from_cart
+from app.telegrambot.utils import send_message_to_all
 
 class ProductAPI(viewsets.GenericViewSet, mixins.ListModelMixin):
     serializer_class = ProductSerializers
