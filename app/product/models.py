@@ -1,5 +1,8 @@
 from django.db import models
 import uuid
+from django.db.models import Sum, F
+from django.utils.timezone import now
+from datetime import timedelta
 
 class Category(models.Model):
     title = models.CharField(
@@ -62,6 +65,36 @@ class Product(models.Model):
         if not self.sku:
             self.sku = f"PRD-{uuid.uuid4().hex[:8].upper()}"
         super().save(*args, **kwargs)
+
+    def total_sold_quantity(self):
+        return sum(item.quantity for item in self.orderitem_set.all())
+    
+    def total_revenue(self):
+        try:
+            price = float(self.price.replace(',', '.'))
+        except:
+            price = 0
+        return sum(item.quantity * price for item in self.orderitem_set.all())
+
+    def sales_today(self):
+        today = now().date()
+        return self.orderitem_set.filter(order__created_at__date=today).aggregate(
+            total=Sum('quantity')
+        )['total'] or 0
+
+    def sales_week(self):
+        today = now().date()
+        week_start = today - timedelta(days=today.weekday())  # понедельник
+        return self.orderitem_set.filter(order__created_at__date__gte=week_start).aggregate(
+            total=Sum('quantity')
+        )['total'] or 0
+
+    def sales_month(self):
+        today = now().date()
+        month_start = today.replace(day=1)
+        return self.orderitem_set.filter(order__created_at__date__gte=month_start).aggregate(
+            total=Sum('quantity')
+        )['total'] or 0
 
     def __str__(self):
         return self.title
